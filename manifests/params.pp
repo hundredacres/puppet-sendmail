@@ -41,6 +41,18 @@ class sendmail::params {
     default => 'sendmail',
   }
 
+  $aliases_file = $::operatingsystem ? {
+    default => '/etc/aliases',
+  }
+
+  $mailertable_file = $::operatingsystem ? {
+    default => '/etc/mail/mailertable',
+  }
+
+  $virtualusers_file = $::operatingsystem ? {
+    default => '/etc/mail/virtusertable',
+  }
+
   $config_dir = $::operatingsystem ? {
     default => '/etc/mail',
   }
@@ -92,6 +104,14 @@ class sendmail::params {
   $source_dir = ''
   $source_dir_purge = false
   $template = ''
+  $aliases_source = ''
+  $aliases_template = ''
+  $custom_aliases = ''
+  $mailertable_source = ''
+  $mailertable_template = ''
+  $virtualusers_source = ''
+  $virtualusers_template = ''
+  $server = false
   $options = ''
   $service_autorestart = true
   $version = 'present'

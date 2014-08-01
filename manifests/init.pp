@@ -205,46 +205,55 @@
 #   Alessandro Franceschi <al@lab42.it/>
 #
 class sendmail (
-  $my_class            = params_lookup( 'my_class' ),
-  $source              = params_lookup( 'source' ),
-  $source_dir          = params_lookup( 'source_dir' ),
-  $source_dir_purge    = params_lookup( 'source_dir_purge' ),
-  $template            = params_lookup( 'template' ),
-  $service_autorestart = params_lookup( 'service_autorestart' , 'global' ),
-  $options             = params_lookup( 'options' ),
-  $version             = params_lookup( 'version' ),
-  $absent              = params_lookup( 'absent' ),
-  $disable             = params_lookup( 'disable' ),
-  $disableboot         = params_lookup( 'disableboot' ),
-  $monitor             = params_lookup( 'monitor' , 'global' ),
-  $monitor_tool        = params_lookup( 'monitor_tool' , 'global' ),
-  $monitor_target      = params_lookup( 'monitor_target' , 'global' ),
-  $puppi               = params_lookup( 'puppi' , 'global' ),
-  $puppi_helper        = params_lookup( 'puppi_helper' , 'global' ),
-  $firewall            = params_lookup( 'firewall' , 'global' ),
-  $firewall_tool       = params_lookup( 'firewall_tool' , 'global' ),
-  $firewall_src        = params_lookup( 'firewall_src' , 'global' ),
-  $firewall_dst        = params_lookup( 'firewall_dst' , 'global' ),
-  $debug               = params_lookup( 'debug' , 'global' ),
-  $audit_only          = params_lookup( 'audit_only' , 'global' ),
-  $package             = params_lookup( 'package' ),
-  $service             = params_lookup( 'service' ),
-  $service_status      = params_lookup( 'service_status' ),
-  $process             = params_lookup( 'process' ),
-  $process_args        = params_lookup( 'process_args' ),
-  $process_user        = params_lookup( 'process_user' ),
-  $config_dir          = params_lookup( 'config_dir' ),
-  $config_file         = params_lookup( 'config_file' ),
-  $config_file_mode    = params_lookup( 'config_file_mode' ),
-  $config_file_owner   = params_lookup( 'config_file_owner' ),
-  $config_file_group   = params_lookup( 'config_file_group' ),
-  $config_file_init    = params_lookup( 'config_file_init' ),
-  $pid_file            = params_lookup( 'pid_file' ),
-  $data_dir            = params_lookup( 'data_dir' ),
-  $log_dir             = params_lookup( 'log_dir' ),
-  $log_file            = params_lookup( 'log_file' ),
-  $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $my_class              = params_lookup( 'my_class' ),
+  $source                = params_lookup( 'source' ),
+  $source_dir            = params_lookup( 'source_dir' ),
+  $source_dir_purge      = params_lookup( 'source_dir_purge' ),
+  $template              = params_lookup( 'template' ),
+  $aliases_source        = params_lookup( 'aliases_source' ),
+  $aliases_template      = params_lookup( 'aliases_template' ),
+  $aliases_file          = params_lookup( 'aliases_file' ),
+  $custom_aliases        = params_lookup( 'custom_aliases' ),
+  $server                = params_lookup( 'server' ),
+  $mailertable_source    = params_lookup( 'mailertable_source' ),
+  $mailertable_template  = params_lookup( 'mailertable_template' ),
+  $virtualusers_source   = params_lookup( 'virtualusers_source' ),
+  $virtualusers_template = params_lookup( 'virtualusers_template' ),
+  $service_autorestart   = params_lookup( 'service_autorestart' , 'global' ),
+  $options               = params_lookup( 'options' ),
+  $version               = params_lookup( 'version' ),
+  $absent                = params_lookup( 'absent' ),
+  $disable               = params_lookup( 'disable' ),
+  $disableboot           = params_lookup( 'disableboot' ),
+  $monitor               = params_lookup( 'monitor' , 'global' ),
+  $monitor_tool          = params_lookup( 'monitor_tool' , 'global' ),
+  $monitor_target        = params_lookup( 'monitor_target' , 'global' ),
+  $puppi                 = params_lookup( 'puppi' , 'global' ),
+  $puppi_helper          = params_lookup( 'puppi_helper' , 'global' ),
+  $firewall              = params_lookup( 'firewall' , 'global' ),
+  $firewall_tool         = params_lookup( 'firewall_tool' , 'global' ),
+  $firewall_src          = params_lookup( 'firewall_src' , 'global' ),
+  $firewall_dst          = params_lookup( 'firewall_dst' , 'global' ),
+  $debug                 = params_lookup( 'debug' , 'global' ),
+  $audit_only            = params_lookup( 'audit_only' , 'global' ),
+  $package               = params_lookup( 'package' ),
+  $service               = params_lookup( 'service' ),
+  $service_status        = params_lookup( 'service_status' ),
+  $process               = params_lookup( 'process' ),
+  $process_args          = params_lookup( 'process_args' ),
+  $process_user          = params_lookup( 'process_user' ),
+  $config_dir            = params_lookup( 'config_dir' ),
+  $config_file           = params_lookup( 'config_file' ),
+  $config_file_mode      = params_lookup( 'config_file_mode' ),
+  $config_file_owner     = params_lookup( 'config_file_owner' ),
+  $config_file_group     = params_lookup( 'config_file_group' ),
+  $config_file_init      = params_lookup( 'config_file_init' ),
+  $pid_file              = params_lookup( 'pid_file' ),
+  $data_dir              = params_lookup( 'data_dir' ),
+  $log_dir               = params_lookup( 'log_dir' ),
+  $log_file              = params_lookup( 'log_file' ),
+  $port                  = params_lookup( 'port' ),
+  $protocol              = params_lookup( 'protocol' )
   ) inherits sendmail::params {
 
   $bool_source_dir_purge=any2bool($source_dir_purge)
@@ -252,11 +261,20 @@ class sendmail (
   $bool_absent=any2bool($absent)
   $bool_disable=any2bool($disable)
   $bool_disableboot=any2bool($disableboot)
+  $bool_server=any2bool($server)
   $bool_monitor=any2bool($monitor)
   $bool_puppi=any2bool($puppi)
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+
+  $array_custom_aliases = is_array($sendmail::custom_aliases) ? {
+    false => $sendmail::custom_aliases ? {
+      ''      => [],
+      default => split($sendmail::custom_aliases, ','),
+    },
+    default => $sendmail::custom_aliases,
+  }
 
   ### Definition of some variables used in the module
   $manage_package = $sendmail::bool_absent ? {
@@ -328,6 +346,41 @@ class sendmail (
     default   => template($sendmail::template),
   }
 
+  $manage_aliases_source = $sendmail::aliases_source ? {
+    ''      => undef,
+    default => $sendmail::aliases_source,
+  }
+
+  $manage_aliases_content = $sendmail::aliases_template ? {
+    ''      => undef,
+    default => template($sendmail::aliases_template),
+  }
+
+  $manage_mailertable_source = $sendmail::mailertable_source ? {
+    ''      => undef,
+    default => $sendmail::mailertable_source,
+  }
+
+  $manage_mailertable_content = $sendmail::mailertable_template ? {
+    ''      => undef,
+    default => template($sendmail::mailertable_template),
+  }
+
+  $manage_virtualusers_source = $sendmail::virtualusers_source ? {
+    ''      => undef,
+    default => $sendmail::virtualusers_source,
+  }
+
+  $manage_virtualusers_content = $sendmail::virtualusers_template ? {
+    ''      => undef,
+    default => template($sendmail::virtualusers_template),
+  }
+
+  # Include server configs if $server  == true
+  if $sendmail::bool_server  == true {
+    include sendmail::server
+  }
+
   ### Managed resources
   package { $sendmail::package:
     ensure => $sendmail::manage_package,
@@ -359,6 +412,20 @@ class sendmail (
     notify  => $sendmail::manage_service_autorestart,
     source  => $sendmail::manage_file_source,
     content => $sendmail::manage_file_content,
+    replace => $sendmail::manage_file_replace,
+    audit   => $sendmail::manage_audit,
+  }
+
+  file { 'aliases':
+    ensure  => $sendmail::manage_file,
+    path    => $sendmail::aliases_file,
+    mode    => $sendmail::config_file_mode,
+    owner   => $sendmail::config_file_owner,
+    group   => $sendmail::config_file_group,
+    require => Package[$sendmail::package],
+    notify  => $sendmail::manage_service_autorestart,
+    source  => $sendmail::manage_aliases_source,
+    content => $sendmail::manage_aliases_content,
     replace => $sendmail::manage_file_replace,
     audit   => $sendmail::manage_audit,
   }
